@@ -7,8 +7,8 @@ require('dotenv').config();
 app.use(express.json());
 
 app.get('/', (req, res) => {
-    res.send('hola'); // Renderiza el archivo home.ejs
-});
+    res.send('¡Hola mundo! Próximamente habra vistas. '); // Renderiza el archivo home.ejs
+}); 
 
 // Rutas para los autos
 app.use('/api', autoRoutes);
