@@ -1,20 +1,17 @@
 const express = require('express');
 const router = express.Router();
 const autoController = require('../controllers/autoController');
+const upload = require('../config/multerConfig');
+const  requireAuth  = require('../guards/estaLogged');
 
-// Obtener todos los autos
-router.get('/autos/obtenerTodos', autoController.obtenerTodos);
+router.get('/listado', requireAuth, autoController.mostrarListado);
+router.get('/alta', requireAuth, autoController.mostrarFormularioAlta);
+router.post('/alta', upload.single('foto'), autoController.formularioAltaPost);
+router.get('/modificar/:id', requireAuth, autoController.mostrarFormularioModificacion);
+router.put('/modificar/:id', upload.single('foto'), autoController.modificarAuto);
+router.delete('/eliminar/:id', autoController.eliminarAuto);
 
-// Obtener un auto por su id
-router.get('/auto/obtenerUno/:id', autoController.obtenerUno);
-
-// Agregar un nuevo auto
-router.post('/auto/crear', autoController.agregarAuto);
-
-// Eliminar un auto por su ID
-router.delete('/auto/eliminarAuto/:id', autoController.eliminarAuto);
-
-// Modificar un auto por su ID
-router.put('/auto/modificarAuto/:id', autoController.modificarAuto);
-
+router.use((req, res) => {
+    res.status(404).render('../views/404.ejs');
+  });
 module.exports = router;

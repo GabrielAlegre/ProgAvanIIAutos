@@ -1,84 +1,112 @@
-// autoController.js
-
-const { conn } = require('../config/conn');
 const Auto = require('../models/Auto');
+mensajeExito="";
+//para proxima clase crud completo y en la raiz el listado
+async function mostrarFormularioAlta(req, res)
+{
+    try{
+        return res.render('../views/autoAlta.ejs', {modificar:false});
+    } catch(error){
+        return res.status(500).send('Errer interno del servidor');
+    }
+}
 
-
-async function obtenerUno(req, res) {
+async function mostrarFormularioModificacion(req, res) {
     try {
-        const id = req.params.id;
-      const auto = await Auto.findByPk(id);
-      if (auto === null) {
-        throw new Error("No existe el auto con el id: "+ id)
-      }
-      res.status(200).json(auto);
+        const auto = await Auto.findByPk(req.params.id);
+        if (!auto) {
+            // return res.status(404).send('Auto no encontrado');
+            return res.render('../views/404.ejs', { modificar: true, auto });
+
+        }
+        return res.render('../views/autoAlta.ejs', { modificar: true, auto });
     } catch (error) {
-      console.error('Error al obtener los autos:', error);
-      res.status(500).send({error:error.message});
+        return res.status(500).send('Error interno del servidor');
     }
-  }
-
-async function obtenerTodos(req, res) {
-  try {
-    const autos = await Auto.findAll();
-    res.status(200).json(autos);
-  } catch (error) {
-    console.error('Error al obtener los autos:', error);
-    res.status(500).send('Error interno del servidor');
-  }
 }
 
-async function agregarAuto(req, res) {
+async function formularioAltaPost(req, res)
+{
+    try{
+        const { marca, modelo, anio, color, tipo_combustible, kilometraje, transmision, precio, puertas, tipo_motor } = req.body;
+        const path_foto = req.file ? `/uploads/${req.file.filename}` : '';
 
-  try {
-    const autoAx = await Auto.create(req.body)
-    const {id, ...auto} = autoAx.dataValues; 
-
-    res.status(201).json({ message: 'Auto agregado exitosamente', auto });
-  } catch (error) {
-    console.error('Error al agregar el auto:', error);
-    res.status(500).send('Error interno del servidor');
-  }
-}
-
-async function eliminarAuto(req, res) {
-  const id = req.params.id;
-  try {
-    const autoExiste = await Auto.findByPk(id);
-    if (autoExiste === null) {
-      throw new Error("No eliminar ya que NO existe el auto con el id: "+ id)
+        const nuevoAuto = {
+            marca,
+            modelo,
+            anio,
+            color,
+            tipo_combustible,
+            kilometraje,
+            transmision,
+            precio,
+            puertas,
+            tipo_motor,
+            path_foto
+        };
+        console.log(nuevoAuto);
+        const autoAx = await Auto.create(nuevoAuto);
+        const mensajeExito = '¡El auto se agrego exitosamente!';
+        return res.render('../views/autoAlta.ejs', {modificar:false, mensajeExito, mostrarMensaje: true});
+    } catch(error){
+        console.log({error})
+        return res.status(500).send('Errer interno del servidor');
     }
-    await Auto.destroy({ where: {id}});
-    res.status(200).json({ message: 'Auto eliminado exitosamente' });
-  } catch (error) {
-    console.error('Error al eliminar el auto:', error);
-    res.status(500).send({error:error.message});
-  }
 }
 
 async function modificarAuto(req, res) {
     try {
-        const id = req.params.id;
-        const autoExiste = await Auto.findByPk(id);
-        if (autoExiste === null) {
-          throw new Error("No existe el auto con el id: "+ id)
+        const auto = await Auto.findByPk(req.params.id);
+        if (!auto) {
+            return res.status(404).send('Auto no encontrado');
         }
-        const auto =  await Auto.update(req.body,{where: {id},}); 
-        if(auto[0]=!0){
-            res.status(200).json({ message: 'Auto modificado exitosamente'});
-        }{
-            res.status(200).json({ message: 'No se realizo la modificacion del auto con el id:' + id});
-        }
-  } catch (error) {
-    console.error('Error al modificar el auto:', error);
-    res.status(500).send({error:error.message});
-  }
+
+        const { marca, modelo, anio, color, tipo_combustible, kilometraje, transmision, precio, puertas, tipo_motor } = req.body;
+        const path_foto = req.file ? `/uploads/${req.file.filename}` : auto.path_foto;
+        const nuevoAuto = { marca, modelo, anio, color, tipo_combustible, kilometraje, transmision, precio, puertas, tipo_motor, path_foto
+        };
+        
+        await auto.update(nuevoAuto);
+        const mensajeExito = '¡El auto se modificó exitosamente!';
+        return res.render('../views/autoAlta.ejs', { modificar: true, auto, mensajeExito, mostrarMensaje: true });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).send('Error interno del servidor');
+    }
 }
 
+
+async function mostrarListado(req, res) {
+    try {
+        const autos = await Auto.findAll();
+        res.render('../views/autosListado.ejs', { autos });
+    } catch (error) {
+        console.error('Error al obtener los autos:', error);
+        res.status(500).send('Error interno del servidor');
+    }
+}
+
+async function eliminarAuto(req, res) {
+    const id = req.params.id;
+    try {
+        const autoExiste = await Auto.findByPk(id);
+        if (!autoExiste) {
+            return res.status(404).send('Auto no encontrado');
+        }
+        await Auto.destroy({ where: { id } });
+        res.status(200).json({ message: 'Auto eliminado exitosamente' });
+    } catch (error) {
+        console.error('Error al eliminar el auto:', error);
+        res.status(500).send('Error interno del servidor');
+    }
+}
+
+
+
 module.exports = {
-  obtenerTodos,
-  agregarAuto,
-  eliminarAuto,
-  modificarAuto,
-  obtenerUno
-};
+    mostrarFormularioAlta,
+    formularioAltaPost,
+    mostrarListado,
+    modificarAuto,
+    mostrarFormularioModificacion,
+    eliminarAuto
+}

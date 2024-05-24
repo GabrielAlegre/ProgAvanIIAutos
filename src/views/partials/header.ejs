@@ -1,0 +1,33 @@
+<header>
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #6c757d;">
+        <div class="container">
+            <a style="color: #f8f9fa" class="navbar-brand" href="/autos/listado">The Car Shop</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <% if (userLoggedIn) { %>
+                        <li class="nav-item">
+                            <a style="color: #f8f9fa" class="nav-link" href="/autos/listado">Ver autos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a style="color: #f8f9fa" class="nav-link" href="/autos/alta">Agregar auto</a>
+                        </li>
+                        <li class="nav-item">
+                            <a style="color: #f8f9fa" class="nav-link" href="/usuarios/logout">Cerrar sesión</a>
+                        </li>
+                        <% } else { %>
+                            <li class="nav-item">
+                                <a style="color: #f8f9fa" class="nav-link" href="/usuarios/login">Iniciar sesión</a>
+                            </li>
+                            <li class="nav-item">
+                                <a style="color: #f8f9fa" class="nav-link" href="/usuarios/registro">Registrarse</a>
+                            </li>
+                            <% } %>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>

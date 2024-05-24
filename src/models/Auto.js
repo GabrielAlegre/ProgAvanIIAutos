@@ -5,6 +5,11 @@ class Auto extends Model {}
 
 Auto.init(
   {
+    id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+    },
     marca: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -13,7 +18,7 @@ Auto.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    año: {
+    anio: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
@@ -45,6 +50,11 @@ Auto.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    path_foto: {
+        type: DataTypes.STRING,
+      allowNull: true,
+
+      },
   },
   {
     sequelize,

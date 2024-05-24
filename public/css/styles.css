@@ -1,0 +1,19 @@
+body {
+    background-color: #1b2b38;
+    /* Color de fondo más oscuro */
+    font-family: 'Arial', sans-serif;
+    /* Fuente para todo el sistema */
+    color: #fff;
+    /* Color de texto */
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    /* Asegura que el fondo cubra toda la altura de la pantalla */
+    display: flex;
+    flex-direction: column;
+}
+
+.bg-custom {
+    background-color: #2f3b45;
+    /* Azul grisáceo */
+}

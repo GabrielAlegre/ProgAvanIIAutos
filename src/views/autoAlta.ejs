@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= modificar ? 'Modificar Auto' : 'Alta de Auto' %>
+    </title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="/css/styles.css" rel="stylesheet">
+</head>
+
+<body>
+    <%- include('partials/header') -%>
+        <div class="container mt-5">
+            <% if (mensajeExito) { %>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <%= mensajeExito %>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                <% } %>
+                    <h1 class="mb-4">
+                        <%= modificar ? 'Modificar Auto' : 'Alta de Auto' %>
+                    </h1>
+                    <form action="/autos/<%= modificar ? 'modificar/' + auto.id+'?_method=PUT' : 'alta' %>"
+                        method="POST" enctype="multipart/form-data">
+                        <% if (modificar) { %>
+                            <input type="hidden" name="_method" value="PUT">
+                            <% } %>
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label for="marca" class="form-label">Marca:</label>
+                                        <input type="text" class="form-control" id="marca" name="marca"
+                                            value="<%= modificar ? auto.marca : '' %>" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="modelo" class="form-label">Modelo:</label>
+                                        <input type="text" class="form-control" id="modelo" name="modelo"
+                                            value="<%= modificar ? auto.modelo : '' %>" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="anio" class="form-label">Año:</label>
+                                        <input type="number" class="form-control" id="anio" name="anio"
+                                            value="<%= modificar ? auto.anio : '' %>" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="color" class="form-label">Color:</label>
+                                        <input type="text" class="form-control" id="color" name="color"
+                                            value="<%= modificar ? auto.color : '' %>" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="tipo_combustible" class="form-label">Tipo de Combustible:</label>
+                                        <input type="text" class="form-control" id="tipo_combustible"
+                                            name="tipo_combustible"
+                                            value="<%= modificar ? auto.tipo_combustible : '' %>" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="kilometraje" class="form-label">Kilometraje:</label>
+                                        <input type="number" class="form-control" id="kilometraje" name="kilometraje"
+                                            value="<%= modificar ? auto.kilometraje : '' %>" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="transmision" class="form-label">Transmisión:</label>
+                                        <input type="text" class="form-control" id="transmision" name="transmision"
+                                            value="<%= modificar ? auto.transmision : '' %>" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="precio" class="form-label">Precio:</label>
+                                        <input type="number" class="form-control" id="precio" name="precio"
+                                            value="<%= modificar ? auto.precio : '' %>" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="puertas" class="form-label">Puertas:</label>
+                                        <input type="number" class="form-control" id="puertas" name="puertas"
+                                            value="<%= modificar ? auto.puertas : '' %>" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="tipo_motor" class="form-label">Tipo de Motor:</label>
+                                        <input type="text" class="form-control" id="tipo_motor" name="tipo_motor"
+                                            value="<%= modificar ? auto.tipo_motor : '' %>" required>
+                                    </div>
+                                    <!-- Agrega los demás campos aquí siguiendo la misma estructura -->
+                                </div>
+                                <!-- Otros campos del formulario -->
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label for="foto" class="form-label">Foto:</label>
+                                        <input type="file" class="form-control" id="foto" name="foto" accept="image/*">
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary mt-3">
+                                    <%= modificar ? 'Modificar' : 'Guardar' %>
+                                </button>
+                    </form>
+        </div>
+        <!-- Bootstrap JS (opcional, solo si necesitas funcionalidades de Bootstrap) -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+<%- include('partials/footer') -%>
+
+</html>
