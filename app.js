@@ -15,7 +15,7 @@ require('dotenv').config();
 
 // Configuración de express-session
 app.use(session({
-    secret: 'claveSecretaDeLaWeb12345',
+    secret: process.env.APP_PASS,
     resave: false,
     saveUninitialized: true
   }));

@@ -9,10 +9,10 @@ const Usuario = require('../models/Usuario'); // Importa el modelo de usuario de
       // Verificar si el usuario ya existe
       const existingUser = await Usuario.findOne({ where: { email } });
       if (existingUser) {
-        req.flash('error', 'Ya existe un usuario con ese email');
+        req.flash('error', 'Registro invalido');
         return res.redirect('/usuarios/registro'); // Redirige a la misma página actual
       }
-
+      
       // Hash del password antes de guardarlo en la base de datos
       const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -67,7 +67,7 @@ const Usuario = require('../models/Usuario'); // Importa el modelo de usuario de
       // Buscar el usuario por su correo electrónico
       const user = await Usuario.findOne({ where: { email } });
       if (!user) {
-        req.flash('error', 'No existe ninguna cuenta con ese email');
+        req.flash('error', 'Credenciales inválidas');
         return res.redirect('/usuarios/login');
       }
 
