@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const Usuario = require('../models/Usuario');
 
+//la encriptación de la contraseña es parte de la lógica de negocio y por lo tanto esta en el servicio
 async function crearUsuario( email, password ) {
     try {
         // Verificar si el usuario ya existe

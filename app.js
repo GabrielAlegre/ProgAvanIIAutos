@@ -15,45 +15,45 @@ require('dotenv').config();
 const connect = require('./src/config/conn');
 connect();
 
-// Configuración de express-session
-app.use(session({
-    secret: process.env.APP_PASS,
-    resave: false,
-    saveUninitialized: true
-  }));
-app.use(flash());
-app.use(express.static(path.join(__dirname, 'public')));
-// Servir archivos estáticos
-app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
-app.use(express.json());
-// app.use(bodyParser.json());
-app.use(express.urlencoded());
+    // Configuración de express-session
+    app.use(session({
+        secret: process.env.APP_PASS,
+        resave: false,
+        saveUninitialized: true
+    }));
+    app.use(flash());
+    app.use(express.static(path.join(__dirname, 'public')));
+    // Servir archivos estáticos
+    app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
+    app.use(express.json());
+    // app.use(bodyParser.json());
+    app.use(express.urlencoded());
 
-app.set('view engine', 'ejs');
-app.set('views', './src/views');
-// Configura el middleware method-override
-app.use(methodOverride('_method'));
-app.use(authMiddleware);
-// app.get('/',  (req, res) => {
-//     autoController.mostrarListado(req, res);
-// });
-app.get('/', (req, res, next) => {
-    // Verificar si el usuario está logueado
-    if (req.session && req.session.userId) {
-        // Si está logueado, redirigir al listado de autos
-        return res.redirect('/autos/listado');
-    } else {
-        // Si no está logueado, redirigir al login
-        return res.redirect('/usuarios/login');
-    }
-});
+    app.set('view engine', 'ejs');
+    app.set('views', './src/views');
+    // Configura el middleware method-override
+    app.use(methodOverride('_method'));
+    app.use(authMiddleware);
+    // app.get('/',  (req, res) => {
+    //     autoController.mostrarListado(req, res);
+    // });
+    app.get('/', (req, res, next) => {
+        // Verificar si el usuario está logueado
+        if (req.session && req.session.userId) {
+            // Si está logueado, redirigir al listado de autos
+            return res.redirect('/autos/listado');
+        } else {
+            // Si no está logueado, redirigir al login
+            return res.redirect('/usuarios/login');
+        }
+    });
 
-// Rutas para los autos
-app.use('/api', autoApiRoutes);
-app.use('/autos', autoRoutes);
-app.use('/usuarios', authRoutes);
+    // Rutas para los autos
+    app.use('/api', autoApiRoutes);
+    app.use('/autos', autoRoutes);
+    app.use('/usuarios', authRoutes);
 
-const PORT = process.env.APP_PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Servidor corriendo en el puerto ${PORT} (http://localhost:${PORT})`);
-});
+    const PORT = process.env.APP_PORT || 3000;
+    app.listen(PORT, () => {
+    console.log(`Servidor corriendo en el puerto ${PORT} (http://localhost:${PORT})`);
+    });

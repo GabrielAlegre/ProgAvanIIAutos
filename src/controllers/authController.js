@@ -1,5 +1,6 @@
 const usuarioService = require('../services/usuarioService');
 
+//el controlador es lo más simple posible, Se encarga de recibir la solicitud, descomprimir los datos del req.body, llamar al servicio adecuado, y manejar la respuesta del servicio.
 async function crearUsuario(req, res) {
     const { email, password } = req.body;
     const resp = await usuarioService.crearUsuario( email, password );
