@@ -1,102 +1,112 @@
 const Auto = require('../models/Auto');
+const autoService = require('../services/autoService');
 mensajeExito="";
-//para proxima clase crud completo y en la raiz el listado
-async function mostrarFormularioAlta(req, res)
-{
-    try{
-        return res.render('../views/autoAlta.ejs', {modificar:false});
-    } catch(error){
-        return res.status(500).send('Errer interno del servidor');
-    }
-}
 
-async function mostrarFormularioModificacion(req, res) {
+async function mostrarFormularioAlta(req, res) {
     try {
-        const auto = await Auto.findByPk(req.params.id);
-        if (!auto) {
-            // return res.status(404).send('Auto no encontrado');
-            return res.render('../views/404.ejs', { modificar: true, auto });
-
-        }
-        return res.render('../views/autoAlta.ejs', { modificar: true, auto });
+        return res.render('../views/autoAlta.ejs', { modificar: false });
     } catch (error) {
         return res.status(500).send('Error interno del servidor');
     }
 }
 
-async function formularioAltaPost(req, res)
-{
-    try{
-        const { marca, modelo, anio, color, tipo_combustible, kilometraje, transmision, precio, puertas, tipo_motor } = req.body;
-        const path_foto = req.file ? `/uploads/${req.file.filename}` : '';
+async function mostrarFormularioModificacion(req, res) {
+    const resp = await autoService.obtenerAutoPorId(req.params.id);
 
-        const nuevoAuto = {
-            marca,
-            modelo,
-            anio,
-            color,
-            tipo_combustible,
-            kilometraje,
-            transmision,
-            precio,
-            puertas,
-            tipo_motor,
-            path_foto
-        };
-        console.log(nuevoAuto);
-        const autoAx = await Auto.create(nuevoAuto);
-        const mensajeExito = '¡El auto se agrego exitosamente!';
-        return res.render('../views/autoAlta.ejs', {modificar:false, mensajeExito, mostrarMensaje: true});
-    } catch(error){
-        console.log({error})
-        return res.status(500).send('Errer interno del servidor');
+    if (resp.exito) {
+        return res.render('../views/autoAlta.ejs', { modificar: true, auto: resp.auto });
+    } else {
+        return res.render('../views/404.ejs', { modificar: true, auto: resp.auto });
+    }
+}
+
+async function formularioAltaPost(req, res) {
+    const { marca, modelo, anio, color, tipo_combustible, kilometraje, transmision, precio, puertas, tipo_motor } = req.body;
+    const path_foto = req.file ? `/uploads/${req.file.filename}` : '';
+
+    const nuevoAutoData = {
+        marca,
+        modelo,
+        anio,
+        color,
+        tipo_combustible,
+        kilometraje,
+        transmision,
+        precio,
+        puertas,
+        tipo_motor,
+        path_foto
+    };
+
+    const resp = await autoService.crearAuto(nuevoAutoData);
+
+    if (resp.exito) {
+        const mensajeExito = '¡El auto se agregó exitosamente!';
+        return res.render('../views/autoAlta.ejs', { modificar: false, mensajeExito, mostrarMensaje: true });
+    } else {
+        console.error(resp.error);
+        return res.status(500).send('Error interno del servidor');
     }
 }
 
 async function modificarAuto(req, res) {
-    try {
-        const auto = await Auto.findByPk(req.params.id);
-        if (!auto) {
+    const { marca, modelo, anio, color, tipo_combustible, kilometraje, transmision, precio, puertas, tipo_motor } = req.body;
+    const path_foto = req.file ? `/uploads/${req.file.filename}` : undefined;
+
+    const autoData = {
+        marca,
+        modelo,
+        anio,
+        color,
+        tipo_combustible,
+        kilometraje,
+        transmision,
+        precio,
+        puertas,
+        tipo_motor
+    };
+
+    if (path_foto) {
+        autoData.path_foto = path_foto;
+    }
+
+    const resp = await autoService.actualizarAuto(req.params.id, autoData);
+
+    if (resp.exito) {
+        const mensajeExito = '¡El auto se modificó exitosamente!';
+        return res.render('../views/autoAlta.ejs', { modificar: true, auto: resp.auto, mensajeExito, mostrarMensaje: true });
+    } else {
+        console.error(resp.error);
+        if (resp.error === 'Auto no encontrado') {
             return res.status(404).send('Auto no encontrado');
         }
-
-        const { marca, modelo, anio, color, tipo_combustible, kilometraje, transmision, precio, puertas, tipo_motor } = req.body;
-        const path_foto = req.file ? `/uploads/${req.file.filename}` : auto.path_foto;
-        const nuevoAuto = { marca, modelo, anio, color, tipo_combustible, kilometraje, transmision, precio, puertas, tipo_motor, path_foto
-        };
-        
-        await auto.update(nuevoAuto);
-        const mensajeExito = '¡El auto se modificó exitosamente!';
-        return res.render('../views/autoAlta.ejs', { modificar: true, auto, mensajeExito, mostrarMensaje: true });
-    } catch (error) {
-        console.error(error);
         return res.status(500).send('Error interno del servidor');
     }
 }
 
 
 async function mostrarListado(req, res) {
-    try {
-        const autos = await Auto.findAll();
-        res.render('../views/autosListado.ejs', { autos });
-    } catch (error) {
-        console.error('Error al obtener los autos:', error);
-        res.status(500).send('Error interno del servidor');
+    const resp = await autoService.obtenerTodosLosAutos();
+
+    if (resp.exito) {
+        return res.render('../views/autosListado.ejs', { autos: resp.auto });
+    } else {
+        console.error('Error al obtener los autos:', resp.error);
+        return res.status(500).send('Error interno del servidor');
     }
 }
 
 async function eliminarAuto(req, res) {
-    const id = req.params.id;
-    try {
-        const autoExiste = await Auto.findByPk(id);
-        if (!autoExiste) {
+    const resp = await autoService.eliminarAuto(req.params.id);
+
+    if (resp.exito) {
+        return res.status(200).json({ message: 'Auto eliminado exitosamente' });
+    } else {
+        console.error('Error al eliminar el auto:', resp.error);
+        if (resp.error === 'Auto no encontrado') {
             return res.status(404).send('Auto no encontrado');
         }
-        await Auto.destroy({ where: { id } });
-        res.status(200).json({ message: 'Auto eliminado exitosamente' });
-    } catch (error) {
-        console.error('Error al eliminar el auto:', error);
-        res.status(500).send('Error interno del servidor');
+        return res.status(500).send('Error interno del servidor');
     }
 }
 

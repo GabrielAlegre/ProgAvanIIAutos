@@ -1,31 +1,28 @@
-const { Sequelize, DataTypes, Model } = require('sequelize');
-const sequelize = require('../config/conn');
+const mongoose = require('mongoose');
+const Schema  = mongoose.Schema;
 
+const usuarioSchema = new Schema({
+    // id: {
 
-class Usuario extends Model {}
-
-Usuario.init(
-    {
-        id: {
-            type: DataTypes.INTEGER,
-            autoIncrement: true,
-            primaryKey: true,
-        },
-        email: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            unique: true,
-        },
-        password: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
+    //     // type: Number,
+    //     // autoIncrement: true, // Nota: Mongoose no soporta autoIncrement de forma nativa, hay que usar un plugin
+    //     // primaryKey: true,   // Nota: En Mongoose, 'primaryKey' no se utiliza directamente.
+    // },
+    email: {
+        type: String,
+        required: true,
+        unique: true
     },
-    {
-        sequelize,
-        tableName: "usuarios",
-        timestamps: false,
+    password: {
+        type: String,
+        required: true
     }
-);
+}, {
+    collection: 'usuarios',  // Nombre de la colección en la base de datos
+    timestamps: false,
+    versionKey: false
+});
+
+const Usuario = mongoose.model('Usuario', usuarioSchema);
 
 module.exports = Usuario;

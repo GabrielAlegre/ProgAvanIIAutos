@@ -12,6 +12,8 @@ const session = require('express-session');
 const flash = require('express-flash');
 const authMiddleware = require('./src/middlewares/authMiddleware');
 require('dotenv').config();
+const connect = require('./src/config/conn');
+connect();
 
 // Configuración de express-session
 app.use(session({

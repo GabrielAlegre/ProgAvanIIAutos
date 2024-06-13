@@ -1,66 +1,63 @@
-const { Sequelize, DataTypes, Model } = require('sequelize');
-const sequelize = require('../config/conn');
+const mongoose = require('mongoose');
+const Schema  = mongoose.Schema;
 
-class Auto extends Model {}
 
-Auto.init(
-  {
-    id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true,
-    },
+const autoSchema = new Schema({
+    // id: {
+    //   type: Number,
+    //   autoIncrement: true, // Nota: Requiere el uso del plugin para manejar auto-incremento
+    //   primaryKey: true,   // En Mongoose, 'primaryKey' no se utiliza directamente, solo 'unique' y '_id'
+    // },
     marca: {
-      type: DataTypes.STRING,
-      allowNull: false,
+      type: String,
+      required: true,
     },
     modelo: {
-      type: DataTypes.STRING,
-      allowNull: false,
+      type: String,
+      required: true,
     },
     anio: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
+      type: Number,
+      required: true,
     },
     color: {
-      type: DataTypes.STRING,
-      allowNull: false,
+      type: String,
+      required: true,
     },
     tipo_combustible: {
-      type: DataTypes.STRING,
-      allowNull: false,
+      type: String,
+      required: true,
     },
     kilometraje: {
-      type: DataTypes.FLOAT,
-      allowNull: false,
+      type: Number,
+      required: true,
     },
     transmision: {
-      type: DataTypes.STRING,
-      allowNull: false,
+      type: String,
+      required: true,
     },
     precio: {
-      type: DataTypes.FLOAT,
-      allowNull: false,
+      type: Number,
+      required: true,
     },
     puertas: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
+      type: Number,
+      required: true,
     },
     tipo_motor: {
-      type: DataTypes.STRING,
-      allowNull: false,
+      type: String,
+      required: true,
     },
     path_foto: {
-        type: DataTypes.STRING,
-      allowNull: true,
+      type: String,
+      required: false,
+    },
+  }, {
+    collection: 'autos',  // Nombre de la colección en la base de datos
+    timestamps: false,
+    versionKey: false
+  });
 
-      },
-  },
-  {
-    sequelize,
-    modelName: 'Auto',
-    timestamps: false
-  }
-);
+  const Auto = mongoose.model('Auto', autoSchema);
 
-module.exports = Auto;
+  module.exports = Auto;
