@@ -36,6 +36,41 @@
         <!-- Bootstrap JS -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/simple-notify@latest/dist/simple-notify.min.js"></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const urlParams = new URLSearchParams(window.location.search);
+                const message = urlParams.get('message');
+                if (message == "token") {
+                    if (message) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Token inválido o expirado',
+                            text: "Por favor, inicia sesión nuevamente.",
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = "/usuarios/login";
+                            }
+                        });
+                    }
+                } else if (message == "cierra") {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Se ha cerrado sesión exitosamente!',
+                        text: "iniciar sesion cuando quiera, Lo esperamos!",
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = "/usuarios/login";
+                        }
+                    });
+                }
+            });
+        </script>
+
         <% if (typeof messages !=='undefined' && messages.error) { %>
             <script>
                 new Notify({
