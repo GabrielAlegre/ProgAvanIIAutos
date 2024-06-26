@@ -67,7 +67,7 @@ function logout(req, res, message) {
                 return res.status(500).send('Error interno del servidor');
             }
             res.clearCookie('auth_token');
-      
+            console.log("Se destruyó la sesión y se borro la cookie con el token");
             if(message=="token")
             {
                 return res.redirect(`/usuarios/login?message=${encodeURIComponent(message)}`);

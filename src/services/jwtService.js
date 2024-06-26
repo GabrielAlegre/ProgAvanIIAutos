@@ -8,12 +8,14 @@ const generarJWT = async ({ id, email }) => {
         if (!id) { throw new Error('No tenemos el id del usuario'); }
         if (!email) { throw new Error('No tenemos el email del usuario'); }
 
+        //Creo una instancia de SignJWT con el payload { id, email }. Este payload será el contenido del JWT, conteniendo la identificación del usuario y su email.
         const jwtConstructor = new SignJWT({ id, email });
         const encoder = new TextEncoder();
+        //Configuración del JWT:
         const jwt = await jwtConstructor
             .setProtectedHeader({ alg: "HS256", typ: "JWT" })
             .setIssuedAt()
-            .setExpirationTime("2m")
+            .setExpirationTime("10s")
             .sign(encoder.encode(jwtKey));
             console.log('JWT generado:', jwt);
         return { data: jwt,  exito: true };
@@ -41,7 +43,7 @@ const guardarJWTEnCookie = (res, token) => {
 };
 
 const ObtenerJWTDeCookie = (req) => {
-    const token = req.cookies.auth_token; // Lee directamente la cookie 'auth_token'
+    const token = req.cookies.auth_token;
     return token || '';
 };
 
