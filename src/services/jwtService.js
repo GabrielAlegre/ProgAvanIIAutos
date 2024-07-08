@@ -15,7 +15,7 @@ const generarJWT = async ({ id, email }) => {
         const jwt = await jwtConstructor
             .setProtectedHeader({ alg: "HS256", typ: "JWT" })
             .setIssuedAt()
-            .setExpirationTime("10s")
+            .setExpirationTime("60s")
             .sign(encoder.encode(jwtKey));
             console.log('JWT generado:', jwt);
         return { data: jwt,  exito: true };
