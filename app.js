@@ -13,10 +13,10 @@ const flash = require('express-flash');
 const authMiddleware = require('./src/middlewares/authMiddleware');// Middleware para verificar si el usuario está logueado
 const verifyJWT = require('./src/middlewares/tokenMiddleware'); // Middleware para verificar el token JWT
 require('dotenv').config();
-const connect = require('./src/config/conn');
+const {connect} = require('./src/config/conn');
 const cookieParser = require('cookie-parser');
 ////////////////ODM MONGO"/////////////////
-// connect();
+connect();
 ////////////////ODM MONGO"/////////////////
 
 app.use(cookieParser());
