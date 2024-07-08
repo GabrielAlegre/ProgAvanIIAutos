@@ -15,7 +15,9 @@ const verifyJWT = require('./src/middlewares/tokenMiddleware'); // Middleware pa
 require('dotenv').config();
 const connect = require('./src/config/conn');
 const cookieParser = require('cookie-parser');
-connect();
+////////////////ODM MONGO"/////////////////
+// connect();
+////////////////ODM MONGO"/////////////////
 
 app.use(cookieParser());
     // Configuración de express-session
@@ -49,7 +51,7 @@ app.use(cookieParser());
     });
 
     // Rutas para los autos
-    app.use('/api', verifyJWT, autoApiRoutes);
+    app.use('/api', autoApiRoutes);
     app.use('/autos', verifyJWT, autoRoutes);
     app.use('/usuarios', authRoutes);
 

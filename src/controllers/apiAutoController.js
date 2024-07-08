@@ -1,7 +1,7 @@
 // autoController.js
 
 const { conn } = require('../config/conn');
-const Auto = require('../models/Auto');
+const Auto = require('../models/AutoSqlSquelize');
 
 
 async function obtenerUno(req, res) {
